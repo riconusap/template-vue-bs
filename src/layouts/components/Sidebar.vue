@@ -57,7 +57,8 @@ import {
   faBuilding,
   faFileContract,
   faFileInvoice,
-  faUserTie
+  faUserTie,
+  faDatabase
 } from '@fortawesome/free-solid-svg-icons';
 
 interface IMenuItem {
@@ -82,26 +83,6 @@ export default defineComponent({
         icon: faHouse
       },
       {
-        index: '/employees',
-        title: 'Employees',
-        icon: faUser
-      },
-      {
-        index: '/clients',
-        title: 'Clients',
-        icon: faStore
-      },
-      {
-        index: '/pic-externals',
-        title: 'PIC Externals',
-        icon: faUsers
-      },
-      {
-        index: '/placements',
-        title: 'Placements',
-        icon: faBuilding
-      },
-      {
         index: '/contract-clients',
         title: 'Contract Clients',
         icon: faFileContract
@@ -111,12 +92,33 @@ export default defineComponent({
         title: 'Invoices',
         icon: faFileInvoice
       },
-      // Contract Employees integrated into Employees module
-      // {
-      //   index: '/contract-employees',
-      //   title: 'Contract Employees',
-      //   icon: faUserTie
-      // }
+      {
+        index: 'master-data',
+        title: 'Master Data',
+        icon: faDatabase,
+        children: [
+          {
+            index: '/employees',
+            title: 'Employees',
+            icon: faUser
+          },
+          {
+            index: '/placements',
+            title: 'Placements',
+            icon: faBuilding
+          },
+          {
+            index: '/clients',
+            title: 'Clients',
+            icon: faStore
+          },
+          {
+            index: '/pic-externals',
+            title: 'PIC Externals',
+            icon: faUsers
+          },
+        ]
+      },
     ]);
 
     const activeMenu = computed(() => {

@@ -68,6 +68,30 @@ const routes: RouteRecordRaw[] = [
         }
       },
       {
+        path: 'clients/create',
+        name: 'clients-create',
+        component: () => import('@/views/clients/ClientFormView.vue'),
+        meta: {
+          title: 'Tambah Klien',
+          breadcrumb: [
+            { text: 'Clients', to: '/clients' },
+            { text: 'Tambah Klien', to: '/clients/create' }
+          ]
+        }
+      },
+      {
+        path: 'clients/:id/edit',
+        name: 'clients-edit',
+        component: () => import('@/views/clients/ClientFormView.vue'),
+        meta: {
+          title: 'Edit Klien',
+          breadcrumb: [
+            { text: 'Clients', to: '/clients' },
+            { text: 'Edit Klien', to: '' }
+          ]
+        }
+      },
+      {
         path: 'pic-externals',
         name: 'pic-externals',
         component: () => import('@/views/pic-externals/PicExternalsView.vue'),

@@ -3,7 +3,7 @@
     <div class="row mb-3">
       <div class="col-12 d-flex justify-content-between align-items-center">
         <h4 class="m-0">Daftar Klien</h4>
-        <el-button type="primary" @click="openForm()">Tambah Klien</el-button>
+        <el-button type="primary" @click="goToCreate">Tambah Klien</el-button>
       </div>
     </div>
     <el-card class="mb-3">
@@ -26,11 +26,23 @@
         <el-table-column prop="phone" label="Telepon" />
         <el-table-column prop="email" label="Email" />
         <el-table-column prop="pic_name" label="PIC" />
-        <el-table-column label="Aksi" width="200">
+        <el-table-column label="Aksi" width="140" align="center">
           <template #default="{ row }">
-            <el-button size="small" @click="viewDetail(row)">Detail</el-button>
-            <el-button size="small" type="warning" @click="editClient(row)">Edit</el-button>
-            <el-button size="small" type="danger" @click="confirmDelete(row)">Hapus</el-button>
+            <el-tooltip content="Detail" placement="top">
+              <el-button size="small" circle @click="viewDetail(row)">
+                <el-icon><View /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="Edit" placement="top">
+              <el-button size="small" type="warning" circle @click="goToEdit(row)">
+                <el-icon><Edit /></el-icon>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="Hapus" placement="top">
+              <el-button size="small" type="danger" circle @click="confirmDelete(row)">
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -46,7 +58,6 @@
         />
       </div>
     </el-card>
-    <client-form v-if="formVisible" :client="selectedClient" @close="closeForm" @saved="fetchClients" />
     <el-dialog v-model="deleteDialogVisible" title="Konfirmasi Hapus" width="400px" center>
       <div class="text-center">
         <p>Yakin ingin menghapus klien <b>{{ selectedClient?.name }}</b>?</p>
@@ -61,18 +72,23 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { clientApi, IClient } from '@/services/api';
 import { ElMessage } from 'element-plus';
-import ClientForm from './ClientForm.vue';
+import { View, Edit, Delete } from '@element-plus/icons-vue';
 import { useErrorDialog } from '@/composables/useErrorDialog';
 
 export default defineComponent({
   name: 'ClientsView',
-  components: { ClientForm },
+  components: {
+    View,
+    Edit,
+    Delete
+  },
   setup() {
+    const router = useRouter();
     const clients = ref<IClient[]>([]);
     const loading = ref(false);
-    const formVisible = ref(false);
     const selectedClient = ref<IClient | null>(null);
     const deleteDialogVisible = ref(false);
     const currentPage = ref(1);
@@ -114,19 +130,12 @@ export default defineComponent({
       }
     };
 
-    const openForm = () => {
-      selectedClient.value = null;
-      formVisible.value = true;
+    const goToCreate = () => {
+      router.push('/clients/create');
     };
 
-    const editClient = (client: IClient) => {
-      selectedClient.value = { ...client };
-      formVisible.value = true;
-    };
-
-    const closeForm = () => {
-      formVisible.value = false;
-      selectedClient.value = null;
+    const goToEdit = (client: IClient) => {
+      router.push(`/clients/${client.uuid}/edit`);
     };
 
     const confirmDelete = (client: IClient) => {
@@ -169,11 +178,9 @@ export default defineComponent({
     return {
       clients,
       loading,
-      formVisible,
       selectedClient,
-      openForm,
-      editClient,
-      closeForm,
+      goToCreate,
+      goToEdit,
       confirmDelete,
       deleteDialogVisible,
       deleteClient,
